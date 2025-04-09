@@ -1,0 +1,104 @@
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-LightItalic.eot');
+    src: local('IntelOne Mono Light Italic'), local('IntelOneMono-LightItalic'),
+        url('IntelOneMono-LightItalic.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-LightItalic.woff2') format('woff2'),
+        url('IntelOneMono-LightItalic.woff') format('woff'),
+        url('IntelOneMono-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-Light.eot');
+    src: local('IntelOne Mono Light'), local('IntelOneMono-Light'),
+        url('IntelOneMono-Light.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-Light.woff2') format('woff2'),
+        url('IntelOneMono-Light.woff') format('woff'),
+        url('IntelOneMono-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-BoldItalic.eot');
+    src: local('IntelOne Mono Bold Italic'), local('IntelOneMono-BoldItalic'),
+        url('IntelOneMono-BoldItalic.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-BoldItalic.woff2') format('woff2'),
+        url('IntelOneMono-BoldItalic.woff') format('woff'),
+        url('IntelOneMono-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-Bold.eot');
+    src: local('IntelOne Mono Bold'), local('IntelOneMono-Bold'),
+        url('IntelOneMono-Bold.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-Bold.woff2') format('woff2'),
+        url('IntelOneMono-Bold.woff') format('woff'),
+        url('IntelOneMono-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-Italic.eot');
+    src: local('IntelOne Mono Italic'), local('IntelOneMono-Italic'),
+        url('IntelOneMono-Italic.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-Italic.woff2') format('woff2'),
+        url('IntelOneMono-Italic.woff') format('woff'),
+        url('IntelOneMono-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-Medium.eot');
+    src: local('IntelOne Mono Medium'), local('IntelOneMono-Medium'),
+        url('IntelOneMono-Medium.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-Medium.woff2') format('woff2'),
+        url('IntelOneMono-Medium.woff') format('woff'),
+        url('IntelOneMono-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-Regular.eot');
+    src: local('IntelOne Mono Regular'), local('IntelOneMono-Regular'),
+        url('IntelOneMono-Regular.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-Regular.woff2') format('woff2'),
+        url('IntelOneMono-Regular.woff') format('woff'),
+        url('IntelOneMono-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'IntelOne Mono';
+    src: url('IntelOneMono-MediumItalic.eot');
+    src: local('IntelOne Mono Medium Italic'), local('IntelOneMono-MediumItalic'),
+        url('IntelOneMono-MediumItalic.eot?#iefix') format('embedded-opentype'),
+        url('IntelOneMono-MediumItalic.woff2') format('woff2'),
+        url('IntelOneMono-MediumItalic.woff') format('woff'),
+        url('IntelOneMono-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+}
+
