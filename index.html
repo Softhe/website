@@ -1,104 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CS2 Crosshair Config Generator</title>
-</head>
-<body>
-  <h2>CS2 Crosshair Config Generator</h2>
-  <label for="shareCode">Enter your CSGO share code:</label>
-  <input type="text" id="shareCode" placeholder="CSGO-O4Jsi-V36wY-rTMGK-9w7qF-jQ8WB">
-  <button onclick="generateConfig()">Generate Config File</button>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.1/bignumber.min.js"></script>
-  <script>
-    const DICTIONARY = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefhijkmnopqrstuvwxyz23456789";
-    const DICTIONARY_LENGTH = DICTIONARY.length;
-    const SHARECODE_PATTERN = /CSGO(-?[\w]{5}){5}$/;
-
-    const bigNumberToByteArray = big => {
-      const str = big.toString(16).padStart(36, "0");
-      const bytes = [];
-      for (let i = 0; i < str.length; i += 2) {
-        bytes.push(parseInt(str.slice(i, i + 2), 16));
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CS2 Crosshair Config Generator - delli.cc</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
-      return bytes;
-    };
 
-    const parseBytes = bytes => ({
-      cl_crosshairgap: Int8Array.of(bytes[2])[0] / 10.0,
-      cl_crosshair_outlinethickness: (bytes[3] & 7) / 2.0,
-      cl_crosshaircolor_r: bytes[4],
-      cl_crosshaircolor_g: bytes[5],
-      cl_crosshaircolor_b: bytes[6],
-      cl_crosshairalpha: bytes[7],
-      cl_crosshair_dynamic_splitdist: bytes[8],
-      cl_fixedcrosshairgap: Int8Array.of(bytes[9])[0] / 10.0,
-      cl_crosshaircolor: bytes[10] & 7,
-      cl_crosshair_drawoutline: bytes[10] & 8 ? 1 : 0,
-      cl_crosshair_dynamic_splitalpha_innermod: ((bytes[10] & 0xF0) >> 4) / 10.0,
-      cl_crosshair_dynamic_splitalpha_outermod: (bytes[11] & 0xF) / 10.0,
-      cl_crosshair_dynamic_maxdist_splitratio: ((bytes[11] & 0xF0) >> 4) / 10.0,
-      cl_crosshairthickness: (bytes[12] & 0x3F) / 10.0,
-      cl_crosshairstyle: (bytes[13] & 0xE) >> 1,
-      cl_crosshairdot: bytes[13] & 0x10 ? 1 : 0,
-      cl_crosshairgap_useweaponvalue: bytes[13] & 0x20 ? 1 : 0,
-      cl_crosshairusealpha: bytes[13] & 0x40 ? 1 : 0,
-      cl_crosshair_t: bytes[13] & 0x80 ? 1 : 0,
-      cl_crosshairsize: (((bytes[15] & 0x1f) << 8) + bytes[14]) / 10.0
-    });
-
-    function decode(shareCode) {
-      if (!shareCode.match(SHARECODE_PATTERN)) {
-        throw new Error('Invalid share code');
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
       }
-      shareCode = shareCode.replace(/CSGO|-/g, '');
-      const chars = Array.from(shareCode).reverse();
-      let big = new BigNumber(0);
-      for (let i = 0; i < chars.length; i++) {
-        big = big.multipliedBy(DICTIONARY_LENGTH).plus(DICTIONARY.indexOf(chars[i]));
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 550px;
+        width: 100%;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
       }
-      return parseBytes(bigNumberToByteArray(big));
-    }
 
-    function generateRandomFilename(length = 8) {
-      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let result = '';
-      for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      .header {
+        margin-bottom: 30px;
       }
-      return result;
-    }
 
-    function generateConfig() {
-      const shareCode = document.getElementById("shareCode").value;
-      try {
-        const result = decode(shareCode);
+      .logo {
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 10px;
+      }
 
-        // Format output as config file
-        let configContent = '';
-        for (const [key, value] of Object.entries(result)) {
-          configContent += `${key} "${value}"\n`;
+      .subtitle {
+        color: #6b7280;
+        font-size: 1.1rem;
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .url {
+        color: #9ca3af;
+        font-size: 0.9rem;
+        font-weight: 400;
+      }
+
+      .form-group {
+        margin-bottom: 30px;
+        text-align: left;
+      }
+
+      .label {
+        display: block;
+        margin-bottom: 8px;
+        color: #374151;
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .input {
+        width: 100%;
+        padding: 16px 20px;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #ffffff;
+        font-family: "Inter", monospace;
+      }
+
+      .input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .input::placeholder {
+        color: #9ca3af;
+      }
+
+      .button {
+        width: 100%;
+        padding: 16px 24px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+      }
+
+      .button:active {
+        transform: translateY(0);
+      }
+
+      .button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .error {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #dc2626;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+        font-size: 0.9rem;
+        display: none;
+      }
+
+      .success {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        color: #16a34a;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 16px;
+        font-size: 0.9rem;
+        display: none;
+      }
+
+      .info {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        line-height: 1.6;
+        text-align: left;
+      }
+
+      .info-title {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .info-step {
+        margin-bottom: 8px;
+        padding-left: 4px;
+      }
+
+      .info-path {
+        font-family: "Courier New", monospace;
+        background: #e2e8f0;
+        padding: 8px 10px;
+        border-radius: 6px;
+        margin-top: 6px;
+        font-size: 0.8rem;
+        word-break: break-all;
+        color: #374151;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 30px 20px;
+          max-width: 95%;
         }
 
-        // Create a blob for the .cfg file
-        const blob = new Blob([configContent], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
+        .logo {
+          font-size: 2rem;
+        }
 
-        // Generate a random filename and create a download link
-        const filename = generateRandomFilename() + '.cfg';
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
+        .subtitle {
+          font-size: 1rem;
+        }
 
-        // Clean up the URL object
-        URL.revokeObjectURL(url);
-      } catch (error) {
-        alert('Error: ' + error.message);
+        .info {
+          font-size: 0.8rem;
+          padding: 14px;
+        }
+
+        .info-path {
+          font-size: 0.75rem;
+          padding: 6px 8px;
+        }
       }
-    }
-  </script>
-</body>
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 25px 15px;
+        }
+
+        .logo {
+          font-size: 1.8rem;
+        }
+
+        .subtitle {
+          font-size: 0.95rem;
+        }
+
+        .info {
+          font-size: 0.78rem;
+          padding: 12px;
+        }
+
+        .info-path {
+          font-size: 0.7rem;
+        }
+      }
+
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ffffff;
+        border-radius: 50%;
+        border-top-color: transparent;
+        animation: spin 1s ease-in-out infinite;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1 class="logo">CS2 Crosshair</h1>
+        <p class="subtitle">Config Generator</p>
+        <p class="url">delli.cc</p>
+      </div>
+
+      <div class="form-group">
+        <label for="shareCode" class="label">Enter your CS2 share code:</label>
+        <input
+          type="text"
+          id="shareCode"
+          class="input"
+          placeholder="CSGO-O4Jsi-V36wY-rTMGK-9w7qF-jQ8WB"
+          autocomplete="off"
+        />
+      </div>
+
+      <button onclick="generateConfig()" class="button" id="generateBtn">
+        Generate Config File
+      </button>
+
+      <div id="error" class="error"></div>
+      <div id="success" class="success"></div>
+
+      <div class="info">
+        <div class="info-title">How to use:</div>
+        <div class="info-step">1. Copy your CS2 crosshair share code</div>
+        <div class="info-step">2. Paste it in the input field above</div>
+        <div class="info-step">3. Click "Generate Config File" to download your .cfg file</div>
+        <div class="info-step">4. Place the .cfg file in your CS2 config folder</div>
+        <div class="info-step">5. Probably located at:</div>
+        <div class="info-path">C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\game\csgo\cfg</div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bignumber.js/9.0.1/bignumber.min.js"></script>
+    <script>
+      const DICTIONARY =
+        "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefhijkmnopqrstuvwxyz23456789";
+      const DICTIONARY_LENGTH = DICTIONARY.length;
+      const SHARECODE_PATTERN = /CSGO(-?[\w]{5}){5}$/;
+
+      const bigNumberToByteArray = (big) => {
+        const str = big.toString(16).padStart(36, "0");
+        const bytes = [];
+        for (let i = 0; i < str.length; i += 2) {
+          bytes.push(parseInt(str.slice(i, i + 2), 16));
+        }
+        return bytes;
+      };
+
+      const parseBytes = (bytes) => ({
+        cl_crosshairgap: Int8Array.of(bytes[2])[0] / 10.0,
+        cl_crosshair_outlinethickness: (bytes[3] & 7) / 2.0,
+        cl_crosshaircolor_r: bytes[4],
+        cl_crosshaircolor_g: bytes[5],
+        cl_crosshaircolor_b: bytes[6],
+        cl_crosshairalpha: bytes[7],
+        cl_crosshair_dynamic_splitdist: bytes[8],
+        cl_fixedcrosshairgap: Int8Array.of(bytes[9])[0] / 10.0,
+        cl_crosshaircolor: bytes[10] & 7,
+        cl_crosshair_drawoutline: bytes[10] & 8 ? 1 : 0,
+        cl_crosshair_dynamic_splitalpha_innermod:
+          ((bytes[10] & 0xf0) >> 4) / 10.0,
+        cl_crosshair_dynamic_splitalpha_outermod: (bytes[11] & 0xf) / 10.0,
+        cl_crosshair_dynamic_maxdist_splitratio:
+          ((bytes[11] & 0xf0) >> 4) / 10.0,
+        cl_crosshairthickness: (bytes[12] & 0x3f) / 10.0,
+        cl_crosshairstyle: (bytes[13] & 0xe) >> 1,
+        cl_crosshairdot: bytes[13] & 0x10 ? 1 : 0,
+        cl_crosshairgap_useweaponvalue: bytes[13] & 0x20 ? 1 : 0,
+        cl_crosshairusealpha: bytes[13] & 0x40 ? 1 : 0,
+        cl_crosshair_t: bytes[13] & 0x80 ? 1 : 0,
+        cl_crosshairsize: (((bytes[15] & 0x1f) << 8) + bytes[14]) / 10.0,
+      });
+
+      function decode(shareCode) {
+        if (!shareCode.match(SHARECODE_PATTERN)) {
+          throw new Error("Invalid share code format");
+        }
+        shareCode = shareCode.replace(/CSGO|-/g, "");
+        const chars = Array.from(shareCode).reverse();
+        let big = new BigNumber(0);
+        for (let i = 0; i < chars.length; i++) {
+          const charIndex = DICTIONARY.indexOf(chars[i]);
+          if (charIndex === -1) {
+            throw new Error("Invalid character in share code");
+          }
+          big = big.multipliedBy(DICTIONARY_LENGTH).plus(charIndex);
+        }
+        return parseBytes(bigNumberToByteArray(big));
+      }
+
+      function generateRandomFilename(length = 8) {
+        const chars =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let result = "";
+        for (let i = 0; i < length; i++) {
+          result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+      }
+
+      function showError(message) {
+        const errorDiv = document.getElementById("error");
+        const successDiv = document.getElementById("success");
+        errorDiv.textContent = message;
+        errorDiv.style.display = "block";
+        successDiv.style.display = "none";
+      }
+
+      function showSuccess(message) {
+        const errorDiv = document.getElementById("error");
+        const successDiv = document.getElementById("success");
+        successDiv.textContent = message;
+        successDiv.style.display = "block";
+        errorDiv.style.display = "none";
+      }
+
+      function hideMessages() {
+        document.getElementById("error").style.display = "none";
+        document.getElementById("success").style.display = "none";
+      }
+
+      function setLoading(loading) {
+        const btn = document.getElementById("generateBtn");
+        if (loading) {
+          btn.innerHTML =
+            '<span class="loading"></span>Generating...';
+          btn.disabled = true;
+        } else {
+          btn.innerHTML = "Generate Config File";
+          btn.disabled = false;
+        }
+      }
+
+      async function generateConfig() {
+        const shareCode = document.getElementById("shareCode").value.trim();
+
+        if (!shareCode) {
+          showError("Please enter a share code");
+          return;
+        }
+
+        hideMessages();
+        setLoading(true);
+
+        try {
+          // Add a small delay for better UX
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          const result = decode(shareCode);
+
+          // Format output as config file
+          let configContent = "// CS2 Crosshair Config - Generated by delli.cc\n";
+          configContent += `// Share Code: ${shareCode}\n`;
+          configContent += `// Generated: ${new Date().toLocaleString()}\n\n`;
+
+          for (const [key, value] of Object.entries(result)) {
+            configContent += `${key} "${value}"\n`;
+          }
+
+          // Create a blob for the .cfg file
+          const blob = new Blob([configContent], { type: "text/plain" });
+          const url = URL.createObjectURL(blob);
+
+          // Generate a random filename and create a download link
+          const filename = `crosshair_${generateRandomFilename()}.cfg`;
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = filename;
+          a.click();
+
+          // Clean up the URL object
+          URL.revokeObjectURL(url);
+
+          showSuccess(`Config file "${filename}" downloaded successfully!`);
+        } catch (error) {
+          showError("Error: " + error.message);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Allow Enter key to trigger generation
+      document
+        .getElementById("shareCode")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            generateConfig();
+          }
+        });
+
+      // Clear messages when user starts typing
+      document
+        .getElementById("shareCode")
+        .addEventListener("input", hideMessages);
+    </script>
+  </body>
 </html>
